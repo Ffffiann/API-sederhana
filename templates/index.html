@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Cuaca</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .weather-info {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Aplikasi Cuaca</h2>
+        <input type="text" id="city" placeholder="Masukkan nama kota" />
+        <button onclick="getWeather()">Dapatkan Cuaca</button>
+
+        <div class="weather-info" id="weatherInfo"></div>
+    </div>
+
+    <script>
+        function getWeather() {
+            const city = document.getElementById('city').value;
+            fetch(`/weather?city=${city}`)
+                .then(response => response.json())
+                .then(data => {
+                    let weatherInfo = '';
+                    if (data.error) {
+                        weatherInfo = `<p>${data.error}</p>`;
+                    } else {
+                        weatherInfo = `
+                            <h3>Cuaca di ${data.city}</h3>
+                            <p>Suhu: ${data.temperature}°C</p>
+                            <p>Kelembapan: ${data.humidity}%</p>
+                            <p>Deskripsi: ${data.weather}</p>
+                        `;
+                    }
+                    document.getElementById('weatherInfo').innerHTML = weatherInfo;
+                })
+                .catch(error => {
+                    console.error('Terjadi kesalahan saat mengambil data cuaca:', error);
+                });
+        }
+    </script>
+
+</body>
+</html>
